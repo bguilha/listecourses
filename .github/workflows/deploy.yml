@@ -6,8 +6,8 @@ on:
       - main  # ou 'master', vérifiez le nom de votre branche principale
 
 env:
-  PROJECT_ID: ID_DE_VOTRE_PROJET_GCP # À REMPLACER (ex: mon-projet-123)
-  REGION: europe-west9               # À REMPLACER (ex: Paris)
+  PROJECT_ID: geometric-orbit-229721   # À REMPLACER (ex: mon-projet-123)
+  REGION: europe-west1               # À REMPLACER (ex: Paris)
   SERVICE_NAME: courses-website      # C'est le nom exact de votre nouveau service
 
 jobs:
