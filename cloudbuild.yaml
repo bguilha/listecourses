@@ -1,0 +1,30 @@
+steps:
+  # 1. Construire l'image Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/listcourses:$COMMIT_SHA', '.']
+
+  # 2. Pousser l'image vers Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/listcourses:$COMMIT_SHA']
+
+  # 3. Déployer sur Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'courses-website'          # Nom de votre service Cloud Run
+      - '--image'
+      - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/listcourses:$COMMIT_SHA'
+      - '--region'
+      - 'europe-west1'           # EXEMPLE: europe-west9 (Paris)
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'  # Autorise l'accès public (retirez si usage privé)
+
+# Configuration des substitutions pour Artifact Registry (Google gère cela souvent automatiquement, mais c'est plus sûr de le définir)
+substitutions:
+  _AR_HOSTNAME: 'europe-west1-docker.pkg.dev' # À adapter selon votre région Artifact Registry
+
+images:
+  - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/listcourses:$COMMIT_SHA'
