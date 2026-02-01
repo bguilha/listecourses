@@ -1,15 +1,11 @@
+/* Base Styles */
 :root {
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
-    --bg-color: #f8fafc;
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-color: #f3f4f6;
     --card-bg: #ffffff;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --danger-color: #ef4444;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --radius: 12px;
+    --text-color: #1f2937;
+    --border-color: #e5e7eb;
 }
 
 * {
@@ -21,193 +17,181 @@
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-main);
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
+    color: var(--text-color);
+    line-height: 1.5;
     padding: 20px;
 }
 
 .app-container {
-    width: 100%;
     max-width: 600px;
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-md);
+    margin: 0 auto;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     overflow: hidden;
-    height: 90vh; /* Fixed height for the app feel */
-    display: flex;
-    flex-direction: column;
 }
 
 header {
-    padding: 24px;
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1.5rem;
     text-align: center;
 }
 
 header h1 {
     font-weight: 600;
     font-size: 1.5rem;
-    color: var(--text-main);
 }
 
+/* Tabs */
 .tabs {
     display: flex;
-    background: var(--bg-color);
-    padding: 8px;
-    gap: 8px;
-    overflow-x: auto; /* Allow scrolling on small screens */
-    scrollbar-width: none;
-}
-
-.tabs::-webkit-scrollbar {
-    display: none;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #f9fafb;
+    overflow-x: auto;
 }
 
 .tab-btn {
     flex: 1;
-    padding: 10px 16px;
+    padding: 1rem;
     border: none;
-    background: transparent;
-    color: var(--text-muted);
+    background: none;
+    cursor: pointer;
     font-family: inherit;
     font-weight: 500;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
     white-space: nowrap;
 }
 
 .tab-btn:hover {
-    background-color: rgba(99, 102, 241, 0.1);
     color: var(--primary-color);
+    background-color: #f3f4f6;
 }
 
 .tab-btn.active {
-    background-color: var(--card-bg);
     color: var(--primary-color);
-    box-shadow: var(--shadow-sm);
-    font-weight: 600;
+    border-bottom-color: var(--primary-color);
+    background-color: white;
 }
 
+/* Main Content */
 main {
-    flex: 1;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    padding: 1.5rem;
 }
 
 .input-group {
     display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 1.5rem;
 }
 
 #new-item-input {
     flex: 1;
-    padding: 12px 16px;
+    padding: 0.75rem 1rem;
     border: 1px solid var(--border-color);
-    border-radius: var(--radius);
+    border-radius: 8px;
     font-size: 1rem;
     font-family: inherit;
     transition: border-color 0.2s;
-    outline: none;
 }
 
 #new-item-input:focus {
+    outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 #add-btn {
     background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: var(--radius);
-    width: 48px;
+    border-radius: 8px;
+    padding: 0 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 #add-btn:hover {
     background-color: var(--primary-hover);
 }
 
+/* Shopping List */
 .shopping-list {
     list-style: none;
-    overflow-y: auto;
-    flex: 1;
-    padding-right: 4px; /* Space for scrollbar */
-}
-
-.shopping-list::-webkit-scrollbar {
-    width: 6px;
-}
-.shopping-list::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
-    border-radius: 3px;
 }
 
 .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border-color);
-    animation: fadeIn 0.3s ease;
+    padding: 0.75rem 1rem;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+    cursor: grab;
+    /* Enable grab cursor for dragging */
 }
 
-.item:last-child {
-    border-bottom: none;
+.item:hover {
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.item.dragging {
+    opacity: 0.5;
+    border: 2px dashed var(--primary-color);
+    background-color: #eef2ff;
+    cursor: grabbing;
 }
 
 .item span {
+    flex: 1;
     font-size: 1.05rem;
 }
 
 .delete-btn {
-    background: transparent;
+    background: none;
     border: none;
-    color: var(--text-muted);
+    color: #9ca3af;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
+    padding: 4px;
+    border-radius: 4px;
     transition: all 0.2s;
-    opacity: 0; /* Hidden by default for cleaner look on desktop */
-}
-
-.item:hover .delete-btn {
-    opacity: 1;
-}
-
-/* Always show delete button on touch devices or if preferred */
-@media (hover: none) {
-    .delete-btn {
-        opacity: 1;
-    }
+    margin-left: 10px;
 }
 
 .delete-btn:hover {
-    color: var(--danger-color);
-    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    background-color: #fee2e2;
 }
 
+/* Empty State */
 .empty-state {
     text-align: center;
-    color: var(--text-muted);
-    margin-top: 40px;
+    padding: 2rem 0;
+    color: #9ca3af;
 }
 
 .hidden {
     display: none;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    .app-container {
+        border-radius: 0;
+        min-height: 100vh;
+        box-shadow: none;
+    }
 }

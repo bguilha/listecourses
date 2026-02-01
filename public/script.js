@@ -45,14 +45,70 @@ function renderItems(items) {
         items.forEach(item => {
             const li = document.createElement('li');
             li.className = 'item';
+            li.setAttribute('draggable', 'true'); // Enable draggable
+            li.dataset.id = item.id; // Store ID for reordering
+
             li.innerHTML = `
                 <span>${escapeHtml(item.name)}</span>
                 <button class="delete-btn" onclick="deleteItem(${item.id})">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             `;
+
+            // Drag Events
+            li.addEventListener('dragstart', () => {
+                li.classList.add('dragging');
+            });
+
+            li.addEventListener('dragend', () => {
+                li.classList.remove('dragging');
+                handleReorder();
+            });
+
             shoppingList.appendChild(li);
         });
+    }
+}
+
+// Drag Over Event on Container
+shoppingList.addEventListener('dragover', e => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(shoppingList, e.clientY);
+    const draggable = document.querySelector('.dragging');
+    if (afterElement == null) {
+        shoppingList.appendChild(draggable);
+    } else {
+        shoppingList.insertBefore(draggable, afterElement);
+    }
+});
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.item:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+async function handleReorder() {
+    const items = [...shoppingList.querySelectorAll('.item')];
+    const itemIds = items.map(item => parseInt(item.dataset.id));
+
+    // Optimistic update (UI already updated by drag), now send to server
+    try {
+        await fetch('/api/items/reorder', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: itemIds })
+        });
+    } catch (err) {
+        console.error('Failed to reorder items:', err);
     }
 }
 

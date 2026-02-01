@@ -16,12 +16,11 @@ initDb();
 app.get('/api/items', async (req, res) => {
     try {
         const { category } = req.query;
-        let query = 'SELECT * FROM items ORDER BY created_at DESC';
-        let values = [];
-
         if (category) {
-            query = 'SELECT * FROM items WHERE category = $1 ORDER BY created_at DESC';
+            query = 'SELECT * FROM items WHERE category = $1 ORDER BY position ASC, created_at DESC';
             values = [category];
+        } else {
+            query = 'SELECT * FROM items ORDER BY position ASC, created_at DESC';
         }
 
         const result = await pool.query(query, values);
@@ -60,6 +59,37 @@ app.delete('/api/items/:id', async (req, res) => {
         }
 
         res.json({ message: 'Item deleted' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Reorder items
+app.put('/api/items/reorder', async (req, res) => {
+    try {
+        const { items } = req.body; // Array of IDs in new order
+        if (!Array.isArray(items)) {
+            return res.status(400).json({ error: 'Items array is required' });
+        }
+
+        // We update the position for each item
+        // This could be optimized with a single CASE query but for small lists a loop is fine
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            for (let i = 0; i < items.length; i++) {
+                const id = items[i];
+                await client.query('UPDATE items SET position = $1 WHERE id = $2', [i, id]);
+            }
+            await client.query('COMMIT');
+            res.json({ message: 'Items reordered' });
+        } catch (e) {
+            await client.query('ROLLBACK');
+            throw e;
+        } finally {
+            client.release();
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
