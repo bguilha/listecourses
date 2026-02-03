@@ -21,6 +21,8 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'  # Autorise l'accès public (retirez si usage privé)
+      - '--vpc-connector connector clean'
+      - '--set-env-vars DB_HOST=10.200.0.2, DB_USER=n8n, DB_PASSWORD=ModelageModelage, DB_NAME=n8n'
 
 # Configuration des substitutions pour Artifact Registry (Google gère cela souvent automatiquement, mais c'est plus sûr de le définir)
 substitutions:
