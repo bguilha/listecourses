@@ -254,7 +254,6 @@ async function addFromLibrary(name) {
             if (currentCategory === 'Alimentaire') {
                 fetchItems();
             }
-            libraryModal.classList.add('hidden');
         }
     } catch (err) {
         console.error('Failed to add from library:', err);
