@@ -113,7 +113,6 @@ async function handleAddItem() {
 }
 
 async function deleteItem(id) {
-    if (!confirm('Voulez-vous vraiment supprimer cet article ?')) return;
 
     try {
         const response = await fetch(`/api/items/${id}`, { method: 'DELETE' });
