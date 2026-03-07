@@ -91,6 +91,7 @@ function renderItems(items) {
 
 // Initialize SortableJS
 let sortableList;
+let librarySortableList;
 
 function initSortable() {
     if (sortableList) {
@@ -102,6 +103,19 @@ function initSortable() {
         delayOnTouchOnly: true,
         ghostClass: 'sortable-ghost',
         onEnd: handleReorder
+    });
+}
+
+function initLibrarySortable() {
+    if (librarySortableList) {
+        librarySortableList.destroy();
+    }
+    librarySortableList = Sortable.create(libraryList, {
+        animation: 150,
+        delay: 200,
+        delayOnTouchOnly: true,
+        ghostClass: 'sortable-ghost',
+        onEnd: handleLibraryReorder
     });
 }
 
@@ -118,6 +132,22 @@ async function handleReorder() {
         });
     } catch (err) {
         console.error('Failed to reorder items:', err);
+    }
+}
+
+async function handleLibraryReorder() {
+    const items = [...libraryList.querySelectorAll('.item')];
+    const itemIds = items.map(item => parseInt(item.dataset.id));
+
+    // Optimistic update
+    try {
+        await fetch('/api/items/reorder', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: itemIds })
+        });
+    } catch (err) {
+        console.error('Failed to reorder library items:', err);
     }
 }
 
@@ -159,6 +189,7 @@ async function fetchLibraryItems() {
         const response = await fetch(`/api/items?category=${encodeURIComponent('Bibliothèque')}`);
         const items = await response.json();
         renderLibraryItems(items);
+        initLibrarySortable();
     } catch (err) {
         console.error('Failed to fetch library items:', err);
     }
@@ -175,6 +206,7 @@ function renderLibraryItems(items) {
     items.forEach(item => {
         const li = document.createElement('li');
         li.className = 'item';
+        li.dataset.id = item.id; // Store ID for reordering
 
         const textSpan = document.createElement('span');
         textSpan.innerHTML = escapeHtml(item.name);
