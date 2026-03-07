@@ -111,7 +111,8 @@ main {
     margin-bottom: 1.5rem;
 }
 
-#new-item-input {
+#new-item-input,
+#new-library-item-input {
     flex: 1;
     padding: 0.75rem 1rem;
     border: 1px solid var(--border-color);
@@ -121,13 +122,15 @@ main {
     transition: border-color 0.2s;
 }
 
-#new-item-input:focus {
+#new-item-input:focus,
+#new-library-item-input:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-#add-btn {
+#add-btn,
+#add-library-btn {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -140,7 +143,8 @@ main {
     justify-content: center;
 }
 
-#add-btn:hover {
+#add-btn:hover,
+#add-library-btn:hover {
     background-color: var(--primary-hover);
 }
 
