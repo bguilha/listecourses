@@ -30,6 +30,7 @@ async function fetchItems() {
         const response = await fetch(`/api/items?category=${encodeURIComponent(currentCategory)}`);
         const items = await response.json();
         renderItems(items);
+        initSortable();
     } catch (err) {
         console.error('Failed to fetch items:', err);
     }
@@ -45,7 +46,6 @@ function renderItems(items) {
         items.forEach(item => {
             const li = document.createElement('li');
             li.className = 'item';
-            li.setAttribute('draggable', 'true'); // Enable draggable
             li.dataset.id = item.id; // Store ID for reordering
 
             li.innerHTML = `
@@ -55,45 +55,25 @@ function renderItems(items) {
                 </button>
             `;
 
-            // Drag Events
-            li.addEventListener('dragstart', () => {
-                li.classList.add('dragging');
-            });
-
-            li.addEventListener('dragend', () => {
-                li.classList.remove('dragging');
-                handleReorder();
-            });
-
             shoppingList.appendChild(li);
         });
     }
 }
 
-// Drag Over Event on Container
-shoppingList.addEventListener('dragover', e => {
-    e.preventDefault();
-    const afterElement = getDragAfterElement(shoppingList, e.clientY);
-    const draggable = document.querySelector('.dragging');
-    if (afterElement == null) {
-        shoppingList.appendChild(draggable);
-    } else {
-        shoppingList.insertBefore(draggable, afterElement);
+// Initialize SortableJS
+let sortableList;
+
+function initSortable() {
+    if (sortableList) {
+        sortableList.destroy();
     }
-});
-
-function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.item:not(.dragging)')];
-
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-        } else {
-            return closest;
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
+    sortableList = Sortable.create(shoppingList, {
+        animation: 150,
+        delay: 200,
+        delayOnTouchOnly: true,
+        ghostClass: 'sortable-ghost',
+        onEnd: handleReorder
+    });
 }
 
 async function handleReorder() {

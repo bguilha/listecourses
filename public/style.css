@@ -137,6 +137,11 @@ main {
     transition: all 0.2s;
     cursor: grab;
     /* Enable grab cursor for dragging */
+    touch-action: pan-y;
+    /* Prevent touch panning horizontally, allow scroll */
+    -webkit-user-select: none;
+    /* Prevent text selection on iOS */
+    user-select: none;
 }
 
 .item:hover {
@@ -145,10 +150,13 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.item.dragging {
+.sortable-ghost {
     opacity: 0.5;
     border: 2px dashed var(--primary-color);
     background-color: #eef2ff;
+}
+
+.sortable-drag {
     cursor: grabbing;
 }
 
